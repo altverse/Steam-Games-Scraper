@@ -233,7 +233,7 @@ def ParseSteamGame(app):
         for sub in package['subs']:
           subs.append({'text': SanitizeText(sub['option_text']),
                        'description': sub['option_description'],
-                       'price': round(float(sub['price_in_cents_with_discount']) * 0.01, 2) }) 
+                       'price': round(float(sub['price_in_cents_with_discount']) * 0.01, 2) })
 
       game['packages'].append({'title': SanitizeText(package['title']), 'description': SanitizeText(package['description']), 'subs': subs})
 
@@ -454,54 +454,91 @@ def UpdateFromCSV(dataset, notreleased, discarted, args):
     Log(ERROR, f'File {args.update} not found')
 
 if __name__ == "__main__":
-  Log(INFO, f'Steam Games Scraper {__version__} by {__author__}')
-  parser = argparse.ArgumentParser(description='Steam games scraper.')
-  parser.add_argument('-i', '--infile',   type=str,   default=DEFAULT_INFILE,  help='Input file name')
-  parser.add_argument('-o', '--outfile',  type=str,   default=DEFAULT_OUTFILE,  help='Output file name')
-  parser.add_argument('-s', '--sleep',    type=float, default=DEFAULT_SLEEP,    help='Waiting time between requests')
-  parser.add_argument('-r', '--retries',  type=int,   default=DEFAULT_RETRIES,  help='Number of retries (0 to always retry)')
-  parser.add_argument('-a', '--autosave', type=int,   default=DEFAULT_AUTOSAVE, help='Record the data every number of new entries (0 to deactivate)')
-  parser.add_argument('-d', '--released', type=bool,  default=True,             help='If it is on the list of not yet released, no information is requested')
-  parser.add_argument('-c', '--currency', type=str,   default=DEFAULT_CURRENCY, help='Currency code')
-  parser.add_argument('-l', '--language', type=str,   default=DEFAULT_LANGUAGE, help='Language code')
-  parser.add_argument('-p', '--steamspy', type=str,   default=True,             help='Add SteamSpy info')
-  parser.add_argument('-u', '--update',   type=str,   default='',               help='Update using APPIDs from a CSV file')
-  args = parser.parse_args()
-  random.seed(time.time())
+  # Log(INFO, f'Steam Games Scraper {__version__} by {__author__}')
+  # parser = argparse.ArgumentParser(description='Steam games scraper.')
+  # parser.add_argument('-i', '--infile',   type=str,   default=DEFAULT_INFILE,  help='Input file name')
+  # parser.add_argument('-o', '--outfile',  type=str,   default=DEFAULT_OUTFILE,  help='Output file name')
+  # parser.add_argument('-s', '--sleep',    type=float, default=DEFAULT_SLEEP,    help='Waiting time between requests')
+  # parser.add_argument('-r', '--retries',  type=int,   default=DEFAULT_RETRIES,  help='Number of retries (0 to always retry)')
+  # parser.add_argument('-a', '--autosave', type=int,   default=DEFAULT_AUTOSAVE, help='Record the data every number of new entries (0 to deactivate)')
+  # parser.add_argument('-d', '--released', type=bool,  default=True,             help='If it is on the list of not yet released, no information is requested')
+  # parser.add_argument('-c', '--currency', type=str,   default=DEFAULT_CURRENCY, help='Currency code')
+  # parser.add_argument('-l', '--language', type=str,   default=DEFAULT_LANGUAGE, help='Language code')
+  # parser.add_argument('-p', '--steamspy', type=str,   default=True,             help='Add SteamSpy info')
+  # parser.add_argument('-u', '--update',   type=str,   default='',               help='Update using APPIDs from a CSV file')
+  # args = parser.parse_args()
+  # random.seed(time.time())
+  #
+  # if 'h' in args or 'help' in args:
+  #   parser.print_help()
+  #   sys.exit()
+  #
+  # # dataset = LoadJSON(args.infile)
+  # dataset = None
+  # # discarted = LoadJSON(DISCARTED_FILE)
+  # discarted = None
+  # # notreleased = LoadJSON(NOTRELEASED_FILE)
+  # notreleased = None
+  #
+  # if dataset is None:
+  #   dataset = {}
+  #
+  # if discarted is None:
+  #   discarted = []
+  #
+  # if notreleased is None:
+  #   notreleased = []
+  #
+  # Log(INFO, f'Dataset loaded with {len(dataset)} games' if len(dataset) > 0 else 'New dataset created')
+  #
+  # if len(notreleased) > 0:
+  #   Log(INFO, f'{len(notreleased)} games not released yet')
+  #
+  # if len(discarted) > 0:
+  #   Log(INFO, f'{len(discarted)} apps discarted')
+  #
+  # try:
+  #   if args.update == '':
+  #     Scraper(dataset, notreleased, discarted, args)
+  #   else:
+  #     UpdateFromCSV(dataset, notreleased, discarted, args)
+  # except (KeyboardInterrupt, SystemExit):
+  #   SaveJSON(dataset, args.outfile, args.autosave > 0)
+  #   SaveJSON(discarted, DISCARTED_FILE, args.autosave > 0)
+  #   SaveJSON(notreleased, NOTRELEASED_FILE, args.autosave > 0)
 
-  if 'h' in args or 'help' in args:
-    parser.print_help()
-    sys.exit()
-
-  dataset = LoadJSON(args.infile)
-  discarted = LoadJSON(DISCARTED_FILE)
-  notreleased = LoadJSON(NOTRELEASED_FILE)
-
-  if dataset is None:
-    dataset = {}
-
-  if discarted is None:
-    discarted = []
-
-  if notreleased is None:
-    notreleased = []
-
-  Log(INFO, f'Dataset loaded with {len(dataset)} games' if len(dataset) > 0 else 'New dataset created')
-
-  if len(notreleased) > 0:
-    Log(INFO, f'{len(notreleased)} games not released yet')
-
-  if len(discarted) > 0:
-    Log(INFO, f'{len(discarted)} apps discarted')
-
-  try:
-    if args.update == '':
-      Scraper(dataset, notreleased, discarted, args)
-    else:
-      UpdateFromCSV(dataset, notreleased, discarted, args)
-  except (KeyboardInterrupt, SystemExit):
-    SaveJSON(dataset, args.outfile, args.autosave > 0)
-    SaveJSON(discarted, DISCARTED_FILE, args.autosave > 0)
-    SaveJSON(notreleased, NOTRELEASED_FILE, args.autosave > 0)
+  app = SteamRequest('2943650', min(4, 4), 0, 0, 1)
+  if app:
+    game = ParseSteamGame(app)
+    if game['release_date'] != '':
+        extra = SteamSpyRequest('2943650', min(4, 4), 0, 0, 1)
+        if extra != None:
+          game['user_score'] = extra['userscore']
+          game['score_rank'] = extra['score_rank']
+          game['positive'] = extra['positive']
+          game['negative'] = extra['negative']
+          game['estimated_owners'] = extra['owners'].replace(',', '').replace('..', '-')
+          game['average_playtime_forever'] = extra['average_forever']
+          game['average_playtime_2weeks'] = extra['average_2weeks']
+          game['median_playtime_forever'] = extra['median_forever']
+          game['median_playtime_2weeks'] = extra['median_2weeks']
+          game['discount'] = extra['discount']
+          game['peak_ccu'] = extra['ccu']
+          game['tags'] = extra['tags']
+        else:
+          game['user_score'] = 0
+          game['score_rank'] = ""
+          game['positive'] = 0
+          game['negative'] = 0
+          game['estimated_owners'] = "0 - 0"
+          game['average_playtime_forever'] = 0
+          game['average_playtime_2weeks'] = 0
+          game['median_playtime_forever'] = 0
+          game['median_playtime_2weeks'] = 0
+          game['discount'] = 0
+          game['peak_ccu'] = 0
+          game['tags'] = []
+  print(game)
 
   Log(INFO, 'Done')
+
